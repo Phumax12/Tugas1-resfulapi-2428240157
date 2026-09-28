@@ -136,6 +136,36 @@ app.put("/businesses/:id", (req, res) => {
   });
 });
 
+// DELETE /businesses/1
+app.delete("/businesses/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = businesses.findIndex((b) => b.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      status: "error",
+      message: `Data dengan id ${id} tidak ditemukan`,
+      data: null,
+    });
+  }
+
+  businesses.splice(index, 1);
+  res.status(200).json({
+    status: "success",
+    message: `Data usaha dengan id ${id} berhasil dihapus`,
+    data: null,
+  });
+});
+
+// Middleware catch-all 404 (harus di paling akhir)
+app.use((req, res) => {
+  res.status(404).json({
+    status: "error",
+    message: "Endpoint tidak ditemukan",
+    data: null,
+  });
+});
+
 // Menjalankan aplikasi (khusus non-production, agar bisa berjalan di Vercel)
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () =>
