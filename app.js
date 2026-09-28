@@ -103,6 +103,39 @@ app.post("/businesses", (req, res) => {
   });
 });
 
+// PUT /businesses/1
+// Body: { "namaUsaha": "Anyaman Bambu Sari", "pemilik": "Sari Wulandari", "kategori": "kerajinan", "kota": "Tasikmalaya", "noHp": "082233445566" }
+app.put("/businesses/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = businesses.findIndex((b) => b.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      status: "error",
+      message: `Data dengan id ${id} tidak ditemukan`,
+      data: null,
+    });
+  }
+
+  const { namaUsaha, pemilik, kategori, kota, noHp } = req.body || {};
+
+  if (!namaUsaha || !pemilik || !kategori || !kota) {
+    return res.status(400).json({
+      status: "error",
+      message: "namaUsaha, pemilik, kategori, dan kota wajib diisi",
+      data: null,
+    });
+  }
+
+  businesses[index] = { id, namaUsaha, pemilik, kategori, kota, noHp };
+
+  res.status(200).json({
+    status: "success",
+    message: `Data usaha dengan id ${id} berhasil diubah`,
+    data: businesses[index],
+  });
+});
+
 // Menjalankan aplikasi (khusus non-production, agar bisa berjalan di Vercel)
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () =>
