@@ -38,7 +38,7 @@ let nextId = 4; // penghitung id untuk data baru
 app.get("/", (req, res) => {
   res.json({
     nama: "M. Mario Al Zaky",
-    nim: "ISI_NPM_KAMU",
+    nim: "2428240157",
     topik: 33,
     endpoints: [
       "GET /businesses",
