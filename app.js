@@ -51,6 +51,34 @@ app.get("/", (req, res) => {
   });
 });
 
+// GET /businesses -> seluruh data, bisa difilter: /businesses?kategori=kerajinan
+app.get("/businesses", (req, res) => {
+  const { kategori } = req.query;
+
+  if (kategori) {
+    const hasil = businesses.filter((b) => b.kategori === kategori);
+    return res.status(200).json(hasil);
+  }
+
+  res.status(200).json(businesses);
+});
+
+// GET /businesses/1 -> menampilkan satu data berdasarkan id
+app.get("/businesses/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = businesses.find((b) => b.id === id);
+
+  if (!data) {
+    return res.status(404).json({
+      status: "error",
+      message: `Data dengan id ${id} tidak ditemukan`,
+      data: null,
+    });
+  }
+
+  res.status(200).json(data);
+});
+
 // Menjalankan aplikasi (khusus non-production, agar bisa berjalan di Vercel)
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () =>
