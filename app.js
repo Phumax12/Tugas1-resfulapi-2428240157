@@ -79,6 +79,30 @@ app.get("/businesses/:id", (req, res) => {
   res.status(200).json(data);
 });
 
+// POST /businesses
+// Body: { "namaUsaha": "Anyaman Bambu Sari", "pemilik": "Sari Wulandari", "kategori": "kerajinan", "kota": "Tasikmalaya", "noHp": "082233445566" }
+app.post("/businesses", (req, res) => {
+  const { namaUsaha, pemilik, kategori, kota, noHp } = req.body || {};
+
+  // validasi: field wajib kosong -> 400
+  if (!namaUsaha || !pemilik || !kategori || !kota) {
+    return res.status(400).json({
+      status: "error",
+      message: "namaUsaha, pemilik, kategori, dan kota wajib diisi",
+      data: null,
+    });
+  }
+
+  const baru = { id: nextId++, namaUsaha, pemilik, kategori, kota, noHp };
+  businesses.push(baru);
+
+  res.status(201).json({
+    status: "success",
+    message: "Data berhasil ditambahkan",
+    data: baru,
+  });
+});
+
 // Menjalankan aplikasi (khusus non-production, agar bisa berjalan di Vercel)
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () =>
